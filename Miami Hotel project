@@ -1,0 +1,140 @@
+
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_CUSTOMERS 100
+#define MAX_NAME_LENGTH 50
+#define MAX_ADDRESS_LENGTH 100
+
+struct Customer {
+    char name[MAX_NAME_LENGTH];
+    char address[MAX_ADDRESS_LENGTH];
+    int room_number;
+    int check_in_date;
+    int check_out_date;
+};
+
+struct Customer customers[MAX_CUSTOMERS];
+int num_customers = 0;
+
+void add_customer() {
+    if (num_customers >= MAX_CUSTOMERS) {
+        printf("Maximum number of customers reached\n");
+        return;
+    }
+    
+    struct Customer new_customer;
+    printf("Enter customer name: ");
+    scanf("%s", new_customer.name);
+    printf("Enter customer address: ");
+    scanf("%s", new_customer.address);
+    printf("Enter customer room number: ");
+    scanf("%d", &new_customer.room_number);
+    printf("Enter customer check-in date (YYYYMMDD): ");
+    scanf("%d", &new_customer.check_in_date);
+    printf("Enter customer check-out date (YYYYMMDD): ");
+    scanf("%d", &new_customer.check_out_date);
+    
+    customers[num_customers] = new_customer;
+    num_customers++;
+    printf("Customer added successfully\n");
+}
+
+void view_customers() {
+    printf("Name\tAddress\tRoom Number\tCheck-in Date\tCheck-out Date\n");
+    for (int i = 0; i < num_customers; i++) {
+        printf("%s\t%s\t%d\t\t%d\t\t%d\n", customers[i].name, customers[i].address, customers[i].room_number,
+               customers[i].check_in_date, customers[i].check_out_date);
+    }
+}
+
+void remove_customer() {
+    char name[MAX_NAME_LENGTH];
+    printf("Enter name of customer to remove: ");
+    scanf("%s", name);
+    
+    int customer_found = 0;
+    for (int i = 0; i < num_customers; i++) {
+        if (strcmp(customers[i].name, name) == 0) {
+            customer_found = 1;
+            for (int j = i; j < num_customers - 1; j++) {
+                customers[j] = customers[j+1];
+            }
+            num_customers--;
+            printf("Customer removed successfully\n");
+            break;
+        }
+    }
+    
+    if (!customer_found) {
+        printf("Customer not found\n");
+    }
+}
+
+void check_in_out() {
+    char name[MAX_NAME_LENGTH];
+    printf("Enter name of customer to check in/out: ");
+    scanf("%s", name);
+    
+    int customer_found = 0;
+    for (int i = 0; i < num_customers; i++) {
+        if (strcmp(customers[i].name, name) == 0) {
+            customer_found = 1;
+            int check_choice;
+            printf("Enter 1 to check in, 2 to check out: ");
+            scanf("%d", &check_choice);
+            if (check_choice == 1) {
+                printf("Enter check-in date (YYYYMMDD): ");
+                scanf("%d", &customers[i].check_in_date);
+                printf("Customer checked in successfully\n");
+            }
+            else if (check_choice == 2) {
+                printf("Enter check-out date (YYYYMMDD): ");
+                scanf("%d", &customers[i].check_out_date);
+                printf("Customer checked out successfully\n");
+            }
+            else {
+                printf("Invalid choice\n");
+            }
+            break;
+        }
+    }
+    
+    if (!customer_found) {
+        printf("Customer not found\n");
+    }
+}
+
+int main() {
+    int choice;
+    while (1) {
+        printf("Enter your choice:\n");
+        printf("1. Add customer\n");
+        printf("2. View customers\n");
+        printf("3. Remove customer\n");
+        printf("4. Check in/out customer\n");
+        printf("5. Exit\n");
+        scanf("%d", &choice);
+        
+        switch (choice) {
+            case 1:
+                add_customer();
+                break;
+            case 2:
+                view_customers();
+                break;
+            case 3:
+                remove_customer();
+                break;
+            case 4:
+                check_in_out();
+                break;
+            case 5:
+                printf("Exiting program\n");
+                return 0;
+            default:
+                printf("Invalid choice\n");
+                break;
+        }
+    }
+}
